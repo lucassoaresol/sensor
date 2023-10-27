@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Dump {
+  id         String   @id @default(uuid())
+  name       String   @unique @db.VarChar(254)
+  created_at DateTime @default(now())
+  reads      Read[]
+
+  @@map("dumps")
+}
+
+model Read {
+  id         String   @id @default(uuid())
+  value      Float    @default(0)
+  created_at DateTime @default(now())
+  dump       Dump     @relation(fields: [dump_id], references: [id], onDelete: Cascade)
+  dump_id    String
+
+  @@map("reads")
+}
