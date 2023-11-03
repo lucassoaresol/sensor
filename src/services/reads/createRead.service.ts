@@ -5,7 +5,7 @@ export const createReadService = async (
   { value }: ICreateReadRequest,
   dump_id: string,
 ) => {
-  const read = await prisma.read.create({ data: { value, dump_id } })
+  const read = await prisma.read.create({ data: { value: +value, dump_id } })
 
   return read
 }
