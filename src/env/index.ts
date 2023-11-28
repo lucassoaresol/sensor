@@ -5,6 +5,8 @@ import { AppError } from '../errors'
 const envSchema = z.object({
   NODE_ENV: z.enum(['dev', 'test', 'production']).default('production'),
   PORT: z.coerce.number().default(3333),
+  SECRET_KEY: z.string(),
+  BASE_URL: z.string(),
 })
 
 const _env = envSchema.safeParse(process.env)

@@ -10,11 +10,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  COLLE
+}
+
+enum Status {
+  CANCELED
+  CONCLUDED
+  PROGRESS
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  name        String       @db.VarChar(254)
+  phone       String       @db.VarChar(254)
+  email       String       @unique @db.VarChar(254)
+  password    String       @db.VarChar(128)
+  role        Role         @default(COLLE)
+  is_super    Boolean      @default(false)
+  is_active   Boolean      @default(true)
+  created_at  DateTime     @default(now())
+  profile     Image?
+  token       Token?
+  collections Collection[]
+
+  @@map("users")
+}
+
 model Dump {
-  id         String   @id @default(uuid())
-  name       String   @unique @db.VarChar(254)
-  created_at DateTime @default(now())
-  reads      Read[]
+  id            Int          @id @default(autoincrement())
+  name          String       @unique @db.VarChar(254)
+  sector        String       @default("")
+  lat           Float        @default(0)
+  lng           Float        @default(0)
+  cap           Float        @default(0)
+  value         Float        @default(0)
+  is_collecting Boolean      @default(false)
+  is_active     Boolean      @default(true)
+  created_at    DateTime     @default(now())
+  reads         Read[]
+  collections   Collection[]
 
   @@map("dumps")
 }
@@ -24,7 +60,69 @@ model Read {
   value      Float    @default(0)
   created_at DateTime @default(now())
   dump       Dump     @relation(fields: [dump_id], references: [id], onDelete: Cascade)
-  dump_id    String
+  dump_id    Int
 
   @@map("reads")
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  lat         Float    @default(0)
+  lng         Float    @default(0)
+  date        String   @db.VarChar(50)
+  date_time   DateTime @db.Date
+  value       Float    @default(0)
+  created_at  DateTime @default(now())
+  finished_at Float    @default(0)
+  status      Status   @default(PROGRESS)
+  dump        Dump     @relation(fields: [dump_id], references: [id], onDelete: Cascade)
+  dump_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id     Int
+  month       Month    @relation(fields: [month_id], references: [id], onDelete: Cascade)
+  month_id    String
+  year        Year     @relation(fields: [year_id], references: [id], onDelete: Cascade)
+  year_id     String
+
+  @@map("collections")
+}
+
+model Image {
+  id         String   @id @default(uuid())
+  name       String   @db.VarChar(200)
+  size       Int      @db.Integer()
+  url        String   @db.VarChar(200)
+  key        String   @unique @db.VarChar(200)
+  created_at DateTime @default(now())
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    Int      @unique
+
+  @@map("images")
+}
+
+model Token {
+  id         String   @id @default(uuid())
+  token      String   @db.VarChar(200)
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    Int      @unique
+  created_at DateTime @default(now())
+
+  @@map("token")
+}
+
+model Year {
+  id          String       @id @default(uuid())
+  year        String       @unique @db.VarChar(10)
+  collections Collection[]
+
+  @@map("years")
+}
+
+model Month {
+  id          String       @id @default(uuid())
+  name        String       @unique @db.VarChar(30)
+  month       Int          @unique @db.Integer
+  collections Collection[]
+
+  @@map("months")
 }
