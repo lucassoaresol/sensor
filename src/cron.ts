@@ -14,9 +14,9 @@ const findDump = async () => {
   }
 }
 
-const job = new CronJob('* */30 * * * *', async () => {
+const job = new CronJob('* 30 * * * *', async () => {
   try {
-    await findDump();
+    await findDump()
     console.log('Status das postagens atualizado com sucesso')
   } catch (error) {
     console.error('Erro ao atualizar o status das postagens:', error)
