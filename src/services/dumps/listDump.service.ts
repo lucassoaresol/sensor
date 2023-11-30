@@ -1,7 +1,8 @@
 import { prisma } from '../../lib'
+import { DumpReturnArraySchema } from '../../schemas'
 
 export const listDumpService = async () => {
   const dumps = await prisma.dump.findMany()
 
-  return dumps
+  return DumpReturnArraySchema.parse(dumps)
 }
