@@ -1,7 +1,13 @@
 import { Router } from 'express'
-import { createReadController, listReadController } from '../controllers'
+import {
+  createReadAllController,
+  createReadController,
+  listReadController,
+} from '../controllers'
 
 export const readRouter = Router()
+
+readRouter.post('', createReadAllController)
 
 readRouter.post('/:dump_id', createReadController)
 
