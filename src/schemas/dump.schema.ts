@@ -13,10 +13,14 @@ export const DumpReturnSchema = z
     lng: z.number(),
     cap: z.number(),
     value: z.number(),
-    prc: z.number().optional(),
-    is_collecting: z.boolean(),
+    prc: z.number().optional().default(0),
+    is_collecting: z.boolean().optional().default(false),
     is_active: z.boolean(),
   })
-  .refine((fields) => (fields.prc = (fields.value / fields.cap) * 100))
+  .refine((fields) => {
+    if (fields.value > 0)
+      return (fields.prc = (fields.value / fields.cap) * 100)
+    return fields
+  })
 
 export const DumpReturnArraySchema = DumpReturnSchema.array()

@@ -28,7 +28,6 @@ CREATE TABLE "dumps" (
     "lng" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "cap" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "value" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "is_collecting" BOOLEAN NOT NULL DEFAULT false,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -46,10 +45,26 @@ CREATE TABLE "reads" (
 );
 
 -- CreateTable
-CREATE TABLE "collections" (
+CREATE TABLE "routes" (
     "id" TEXT NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "lng" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "date" VARCHAR(50) NOT NULL,
+    "date_time" DATE NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "finished_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "status" "Status" NOT NULL DEFAULT 'PROGRESS',
+    "dump_id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+    "month_id" TEXT NOT NULL,
+    "year_id" TEXT NOT NULL,
+
+    CONSTRAINT "routes_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "collections" (
+    "id" TEXT NOT NULL,
     "date" VARCHAR(50) NOT NULL,
     "date_time" DATE NOT NULL,
     "value" DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -130,6 +145,18 @@ CREATE UNIQUE INDEX "months_month_key" ON "months"("month");
 
 -- AddForeignKey
 ALTER TABLE "reads" ADD CONSTRAINT "reads_dump_id_fkey" FOREIGN KEY ("dump_id") REFERENCES "dumps"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "routes" ADD CONSTRAINT "routes_dump_id_fkey" FOREIGN KEY ("dump_id") REFERENCES "dumps"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "routes" ADD CONSTRAINT "routes_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "routes" ADD CONSTRAINT "routes_month_id_fkey" FOREIGN KEY ("month_id") REFERENCES "months"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "routes" ADD CONSTRAINT "routes_year_id_fkey" FOREIGN KEY ("year_id") REFERENCES "years"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "collections" ADD CONSTRAINT "collections_dump_id_fkey" FOREIGN KEY ("dump_id") REFERENCES "dumps"("id") ON DELETE CASCADE ON UPDATE CASCADE;

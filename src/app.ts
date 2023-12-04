@@ -1,7 +1,13 @@
 import 'express-async-errors'
 import express from 'express'
 import { errorHandler } from './errors'
-import { dumpRouter, readRouter } from './router'
+import {
+  dumpRouter,
+  passwordRouter,
+  readRouter,
+  sessionRouter,
+  verifyRouter,
+} from './router'
 
 const app = express()
 
@@ -15,6 +21,9 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/login', sessionRouter)
+app.use('/password', passwordRouter)
+app.use('/verify', verifyRouter)
 app.use('/dumps', dumpRouter)
 app.use('/reads', readRouter)
 app.use(errorHandler)

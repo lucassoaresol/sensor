@@ -33,24 +33,25 @@ model User {
   created_at  DateTime     @default(now())
   profile     Image?
   token       Token?
+  routes      Route[]
   collections Collection[]
 
   @@map("users")
 }
 
 model Dump {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique @db.VarChar(254)
-  sector        String       @default("")
-  lat           Float        @default(0)
-  lng           Float        @default(0)
-  cap           Float        @default(0)
-  value         Float        @default(0)
-  is_collecting Boolean      @default(false)
-  is_active     Boolean      @default(true)
-  created_at    DateTime     @default(now())
-  reads         Read[]
-  collections   Collection[]
+  id          Int          @id @default(autoincrement())
+  name        String       @unique @db.VarChar(254)
+  sector      String       @default("")
+  lat         Float        @default(0)
+  lng         Float        @default(0)
+  cap         Float        @default(0)
+  value       Float        @default(0)
+  is_active   Boolean      @default(true)
+  created_at  DateTime     @default(now())
+  reads       Read[]
+  routes      Route[]
+  collections Collection[]
 
   @@map("dumps")
 }
@@ -65,10 +66,29 @@ model Read {
   @@map("reads")
 }
 
-model Collection {
+model Route {
   id          String   @id @default(uuid())
   lat         Float    @default(0)
   lng         Float    @default(0)
+  date        String   @db.VarChar(50)
+  date_time   DateTime @db.Date
+  created_at  DateTime @default(now())
+  finished_at DateTime @default(now())
+  status      Status   @default(PROGRESS)
+  dump        Dump     @relation(fields: [dump_id], references: [id], onDelete: Cascade)
+  dump_id     Int
+  user        User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id     Int
+  month       Month    @relation(fields: [month_id], references: [id], onDelete: Cascade)
+  month_id    String
+  year        Year     @relation(fields: [year_id], references: [id], onDelete: Cascade)
+  year_id     String
+
+  @@map("routes")
+}
+
+model Collection {
+  id          String   @id @default(uuid())
   date        String   @db.VarChar(50)
   date_time   DateTime @db.Date
   value       Float    @default(0)
@@ -113,6 +133,7 @@ model Token {
 model Year {
   id          String       @id @default(uuid())
   year        String       @unique @db.VarChar(10)
+  routes      Route[]
   collections Collection[]
 
   @@map("years")
@@ -122,6 +143,7 @@ model Month {
   id          String       @id @default(uuid())
   name        String       @unique @db.VarChar(30)
   month       Int          @unique @db.Integer
+  routes      Route[]
   collections Collection[]
 
   @@map("months")
