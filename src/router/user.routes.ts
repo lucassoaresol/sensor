@@ -1,6 +1,13 @@
 import { Router } from 'express'
-import { createUserController, listUserController } from '../controllers'
-import { validateSchemaMiddleware } from '../middlewares'
+import {
+  createUserController,
+  listUserController,
+  profileUserController,
+} from '../controllers'
+import {
+  validateSchemaMiddleware,
+  verifyUserIsAuthenticated,
+} from '../middlewares'
 import { CreateUserSchema } from '../schemas'
 
 export const userRouter = Router()
@@ -12,3 +19,5 @@ userRouter.post(
 )
 
 userRouter.get('', listUserController)
+
+userRouter.get('/profile', verifyUserIsAuthenticated, profileUserController)

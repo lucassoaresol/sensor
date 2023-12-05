@@ -26,7 +26,7 @@ export const verifyUserIsAuthenticated = async (
   })
 
   const user = await prisma.user.findFirst({
-    where: { AND: { id: req.user.id, is_active: true } },
+    where: { AND: { id: +req.user.id, is_active: true } },
   })
 
   if (!user) throw new AppError('Not authorized', 401)
