@@ -8,7 +8,7 @@ export const createDumpController = async (req: Request, res: Response) => {
 }
 
 export const listDumpController = async (req: Request, res: Response) => {
-  const dumps = await listDumpService()
+  const dumps = await listDumpService(req.query)
 
   return res.json(dumps)
 }

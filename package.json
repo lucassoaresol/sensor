@@ -28,6 +28,7 @@
     "mailgen": "^2.0.28",
     "multer": "1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "nearby-sort": "^1.1.1",
     "nodemailer": "^6.9.7",
     "zod": "^3.22.4"
   },

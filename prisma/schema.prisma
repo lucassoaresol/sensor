@@ -44,7 +44,7 @@ model Dump {
   name        String       @unique @db.VarChar(254)
   sector      String       @default("")
   lat         Float        @default(0)
-  lng         Float        @default(0)
+  long        Float        @default(0)
   cap         Float        @default(0)
   value       Float        @default(0)
   is_active   Boolean      @default(true)
@@ -69,7 +69,7 @@ model Read {
 model Route {
   id          String   @id @default(uuid())
   lat         Float    @default(0)
-  lng         Float    @default(0)
+  long        Float    @default(0)
   date        String   @db.VarChar(50)
   date_time   DateTime @db.Date
   created_at  DateTime @default(now())
