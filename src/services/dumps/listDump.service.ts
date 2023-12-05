@@ -5,7 +5,7 @@ import { DumpReturnArraySchema } from '../../schemas'
 
 export const listDumpService = async ({ lat, long, sector }: IDumpQuery) => {
   const dumps = await prisma.dump.findMany({
-    where: { sector: { contains: sector, mode: 'insensitive' } },
+    where: { sector: { equals: sector, mode: 'insensitive' } },
     orderBy: { name: 'asc' },
   })
 
