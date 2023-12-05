@@ -6,6 +6,7 @@ import {
   passwordRouter,
   readRouter,
   sessionRouter,
+  userRouter,
   verifyRouter,
 } from './router'
 
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use('/users', userRouter)
 app.use('/login', sessionRouter)
 app.use('/password', passwordRouter)
 app.use('/verify', verifyRouter)
