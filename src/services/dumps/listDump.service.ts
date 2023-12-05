@@ -3,8 +3,11 @@ import { IDumpQuery } from '../../interfaces'
 import { prisma } from '../../lib'
 import { DumpReturnArraySchema } from '../../schemas'
 
-export const listDumpService = async ({ lat, long }: IDumpQuery) => {
-  const dumps = await prisma.dump.findMany({ orderBy: { name: 'asc' } })
+export const listDumpService = async ({ lat, long, sector }: IDumpQuery) => {
+  const dumps = await prisma.dump.findMany({
+    where: { sector: { contains: sector, mode: 'insensitive' } },
+    orderBy: { name: 'asc' },
+  })
 
   const dumpsReturn = DumpReturnArraySchema.parse(dumps)
 
