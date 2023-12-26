@@ -1,2 +1,7 @@
+export * from './createCollection.service'
 export * from './createDump.service'
+export * from './createReserve.service'
+export * from './createRoute.service'
 export * from './listDump.service'
+export * from './updateCollection.service'
+export * from './updateRoute.service'

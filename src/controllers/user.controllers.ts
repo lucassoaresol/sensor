@@ -18,7 +18,7 @@ export const listUserController = async (req: Request, res: Response) => {
 }
 
 export const profileUserController = async (req: Request, res: Response) => {
-  const user = await profileUserService(req.user.id)
+  const user = await profileUserService(req.user.id, req.query)
 
   return res.json(user)
 }

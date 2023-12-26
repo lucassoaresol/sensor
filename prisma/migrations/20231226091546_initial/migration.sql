@@ -25,7 +25,7 @@ CREATE TABLE "dumps" (
     "name" VARCHAR(254) NOT NULL,
     "sector" TEXT NOT NULL DEFAULT '',
     "lat" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "long" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "lon" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "cap" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "value" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
@@ -48,7 +48,7 @@ CREATE TABLE "reads" (
 CREATE TABLE "routes" (
     "id" TEXT NOT NULL,
     "lat" DOUBLE PRECISION NOT NULL DEFAULT 0,
-    "long" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "lon" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "date" VARCHAR(50) NOT NULL,
     "date_time" DATE NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -63,13 +63,23 @@ CREATE TABLE "routes" (
 );
 
 -- CreateTable
+CREATE TABLE "reserves" (
+    "id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "dump_id" INTEGER NOT NULL,
+    "user_id" INTEGER NOT NULL,
+
+    CONSTRAINT "reserves_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "collections" (
     "id" TEXT NOT NULL,
     "date" VARCHAR(50) NOT NULL,
     "date_time" DATE NOT NULL,
     "value" DOUBLE PRECISION NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "finished_at" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "finished_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "status" "Status" NOT NULL DEFAULT 'PROGRESS',
     "dump_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
@@ -126,6 +136,12 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "dumps_name_key" ON "dumps"("name");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "reserves_dump_id_key" ON "reserves"("dump_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "reserves_user_id_key" ON "reserves"("user_id");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "images_key_key" ON "images"("key");
 
 -- CreateIndex
@@ -157,6 +173,12 @@ ALTER TABLE "routes" ADD CONSTRAINT "routes_month_id_fkey" FOREIGN KEY ("month_i
 
 -- AddForeignKey
 ALTER TABLE "routes" ADD CONSTRAINT "routes_year_id_fkey" FOREIGN KEY ("year_id") REFERENCES "years"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reserves" ADD CONSTRAINT "reserves_dump_id_fkey" FOREIGN KEY ("dump_id") REFERENCES "dumps"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "reserves" ADD CONSTRAINT "reserves_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "collections" ADD CONSTRAINT "collections_dump_id_fkey" FOREIGN KEY ("dump_id") REFERENCES "dumps"("id") ON DELETE CASCADE ON UPDATE CASCADE;
